@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { Location, LocationCategory, LocationDocument, LocationPipeline, LocationType } from './schemas/location.schema.js';
 import { CreateLocationDto } from './dto/create-location.dto.js';
 import { UpdateLocationDto } from './dto/update-location.dto.js';
@@ -8,7 +8,7 @@ import { UpdateLocationDto } from './dto/update-location.dto.js';
 @Injectable()
 export class LocationsService {
   constructor(
-    @InjectModel(Location.name) private locationModel: Model<LocationDocument>,
+    @InjectModel(Location.name) private locationModel: mongoose.Model<LocationDocument>,
   ) {}
 
   private async validateParentConstraint(parentCode: string | null) {

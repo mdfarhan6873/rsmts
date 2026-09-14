@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { LoginDto } from './dto/login.dto.js';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { RefreshSession, RefreshSessionDocument } from './schemas/refresh-session.schema.js';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AuthService {
   constructor(
     @Inject(UsersService) private usersService: UsersService,
     @Inject(JwtService) private jwtService: JwtService,
-    @InjectModel(RefreshSession.name) private refreshSessionModel: Model<RefreshSessionDocument>
+    @InjectModel(RefreshSession.name) private refreshSessionModel: mongoose.Model<RefreshSessionDocument>
   ) { }
 
   async validateUser(email: string, pass: string): Promise<any> {

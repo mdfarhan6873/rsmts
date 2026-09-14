@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, Connection } from 'mongoose';
+import mongoose from 'mongoose';
 import { Asset, AssetDocument, AssetStatus } from '../assets/schemas/asset.schema.js';
 import { MovementLog, MovementLogDocument } from './schemas/movement-log.schema.js';
 import { CreateMovementDto } from './dto/create-movement.dto.js';
@@ -10,11 +10,11 @@ import { LocationsService } from '../locations/locations.service.js';
 @Injectable()
 export class MovementsService {
   constructor(
-    @InjectModel(Asset.name) private assetModel: Model<AssetDocument>,
-    @InjectModel(MovementLog.name) private movementLogModel: Model<MovementLogDocument>,
+    @InjectModel(Asset.name) private assetModel: mongoose.Model<AssetDocument>,
+    @InjectModel(MovementLog.name) private movementLogModel: mongoose.Model<MovementLogDocument>,
     @Inject(RoutingRulesService) private routingRulesService: RoutingRulesService,
     @Inject(LocationsService) private locationsService: LocationsService,
-    @InjectConnection() private connection: Connection,
+    @InjectConnection() private connection: mongoose.Connection,
   ) {}
 
   async moveAsset(createMovementDto: CreateMovementDto, userId: string) {

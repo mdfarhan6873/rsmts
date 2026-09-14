@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, Query, Inject } from '@nestjs/common';
 import { LocationsService } from './locations.service.js';
 import { CreateLocationDto } from './dto/create-location.dto.js';
 import { UpdateLocationDto } from './dto/update-location.dto.js';
@@ -8,7 +8,7 @@ import { UserRole } from '../users/schemas/user.schema.js';
 @Controller('locations')
 @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT) // Default for writes
 export class LocationsController {
-  constructor(private readonly locationsService: LocationsService) {}
+  constructor(@Inject(LocationsService) private readonly locationsService: LocationsService) {}
 
   @Post()
   create(@Body() createLocationDto: CreateLocationDto) {

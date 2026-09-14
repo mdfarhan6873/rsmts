@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseEnumPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseEnumPipe, Inject } from '@nestjs/common';
 import { RoutingRulesService } from './routing-rules.service.js';
 import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto.js';
 import { UpdateRoutingRuleDto } from './dto/update-routing-rule.dto.js';
@@ -8,7 +8,7 @@ import { UserRole } from '../users/schemas/user.schema.js';
 @Controller('routing-rules')
 @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
 export class RoutingRulesController {
-  constructor(private readonly routingRulesService: RoutingRulesService) {}
+  constructor(@Inject(RoutingRulesService) private readonly routingRulesService: RoutingRulesService) {}
 
   @Post()
   create(@Body() createRoutingRuleDto: CreateRoutingRuleDto) {

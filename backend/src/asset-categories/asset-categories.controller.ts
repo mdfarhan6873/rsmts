@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Inject } from '@nestjs/common';
 import { AssetCategoriesService } from './asset-categories.service.js';
 import { CreateAssetCategoryDto } from './dto/create-asset-category.dto.js';
 import { UpdateAssetCategoryDto } from './dto/update-asset-category.dto.js';
@@ -7,7 +7,7 @@ import { UserRole } from '../users/schemas/user.schema.js';
 @Controller('asset-categories')
 @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
 export class AssetCategoriesController {
-  constructor(private readonly assetCategoriesService: AssetCategoriesService) {}
+  constructor(@Inject(AssetCategoriesService) private readonly assetCategoriesService: AssetCategoriesService) {}
 
   @Post()
   create(@Body() createAssetCategoryDto: CreateAssetCategoryDto) {

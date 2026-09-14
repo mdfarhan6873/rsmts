@@ -1,6 +1,6 @@
 import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { Asset, AssetDocument, AssetStatus } from './schemas/asset.schema.js';
 import { RegisterAssetDto } from './dto/register-asset.dto.js';
 import { AssetCategoriesService } from '../asset-categories/asset-categories.service.js';
@@ -14,7 +14,7 @@ import { UpdateAssetStatusDto } from './dto/update-asset-status.dto.js';
 @Injectable()
 export class AssetsService {
   constructor(
-    @InjectModel(Asset.name) private assetModel: Model<AssetDocument>,
+    @InjectModel(Asset.name) private assetModel: mongoose.Model<AssetDocument>,
     @Inject(AssetCategoriesService) private assetCategoriesService: AssetCategoriesService,
     @Inject(LocationsService) private locationsService: LocationsService,
     @Inject(RoutingRulesService) private routingRulesService: RoutingRulesService,

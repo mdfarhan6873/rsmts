@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Inject } from '@nestjs/common';
 import { AssetsService } from './assets.service.js';
 import { RegisterAssetDto } from './dto/register-asset.dto.js';
 import { UpdateAssetStatusDto } from './dto/update-asset-status.dto.js';
@@ -7,7 +7,7 @@ import { UserRole } from '../users/schemas/user.schema.js';
 
 @Controller('assets')
 export class AssetsController {
-  constructor(private readonly assetsService: AssetsService) {}
+  constructor(@Inject(AssetsService) private readonly assetsService: AssetsService) {}
 
   @Post()
   @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)

@@ -1,6 +1,6 @@
 import { Inject, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { RoutingRule, RoutingRuleDocument, PipelineOperation } from './schemas/routing-rule.schema.js';
 import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto.js';
 import { UpdateRoutingRuleDto } from './dto/update-routing-rule.dto.js';
@@ -11,7 +11,7 @@ import { LocationCategory, LocationType, LocationPipeline } from '../locations/s
 @Injectable()
 export class RoutingRulesService {
   constructor(
-    @InjectModel(RoutingRule.name) private routingRuleModel: Model<RoutingRuleDocument>,
+    @InjectModel(RoutingRule.name) private routingRuleModel: mongoose.Model<RoutingRuleDocument>,
     @Inject(AssetCategoriesService) private assetCategoriesService: AssetCategoriesService,
     @Inject(LocationsService) private locationsService: LocationsService,
   ) {}

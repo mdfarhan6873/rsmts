@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { AssetCategory, AssetCategoryDocument, AssetCategoryLevel } from './schemas/asset-category.schema.js';
 import { CreateAssetCategoryDto } from './dto/create-asset-category.dto.js';
 import { UpdateAssetCategoryDto } from './dto/update-asset-category.dto.js';
@@ -9,7 +9,7 @@ import { UpdateAssetCategoryDto } from './dto/update-asset-category.dto.js';
 export class AssetCategoriesService {
   constructor(
     @InjectModel(AssetCategory.name)
-    private readonly assetCategoryModel: Model<AssetCategoryDocument>,
+    private readonly assetCategoryModel: mongoose.Model<AssetCategoryDocument>,
   ) {}
 
   async create(createDto: CreateAssetCategoryDto): Promise<AssetCategoryDocument> {

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Inject } from '@nestjs/common';
 import { MovementsService } from './movements.service.js';
 import { CreateMovementDto } from './dto/create-movement.dto.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
@@ -7,7 +7,7 @@ import type { CurrentUserPayload } from '../auth/decorators/current-user.decorat
 import { UserRole } from '../users/schemas/user.schema.js';
 @Controller('movements')
 export class MovementsController {
-  constructor(private readonly movementsService: MovementsService) {}
+  constructor(@Inject(MovementsService) private readonly movementsService: MovementsService) {}
 
   @Post()
   @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.YARD_CONTROLLER, UserRole.REPAIR_SUPERVISOR, UserRole.MANUFACTURING_SUPERVISOR, UserRole.QA_INSPECTOR)
