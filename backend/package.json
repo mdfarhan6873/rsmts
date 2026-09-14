@@ -9,6 +9,8 @@
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "seed": "npx tsx seed-users.ts && npx tsx seed-locations.ts && npx tsx seed-asset-categories.ts",
+    "seed:production": "npx tsx seed-production.ts",
     "dev": "npx tsx watch src/main.ts",
     "start": "nest start",
     "start:dev": "nest start --watch",
