@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Search, Plus, PackagePlus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function CommandCenterNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const { user } = useAuth();
   const isViewer = user?.role === "VIEWER";
 
@@ -33,7 +34,10 @@ export default function CommandCenterNav() {
         <div className="flex items-center gap-4 ml-6">
           {!isViewer && (
             <>
-              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-600 rounded-md hover:bg-gray-50 focus:outline-none transition-colors">
+              <button 
+                onClick={() => router.push('/dashboard/users?add=true')}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-600 rounded-md hover:bg-gray-50 focus:outline-none transition-colors"
+              >
                 <Plus className="h-4 w-4" />
                 Add User
               </button>
