@@ -55,7 +55,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 flex-shrink-0 bg-white h-screen flex flex-col overflow-y-auto">
-      <div className="h-16 flex items-center px-2 mt-4 mb-4">
+      <div className="h-16 flex items-center pl-6 mt-4 mb-4">
         <Image
           src="/logo_bg_removed.png"
           alt="RSMTS Logo"
