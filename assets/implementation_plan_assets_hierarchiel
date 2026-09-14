@@ -1,0 +1,48 @@
+# Asset Category Master Implementation (Updated)
+
+This module models the hierarchical classification of assets (Grandparent → Parent → Child) and introduces the **Identification Rule** for each category to ensure asset numbers are validated correctly upon creation.
+
+## User Review Required
+
+Please review the proposed schema updates below. 
+
+> [!IMPORTANT]
+> **Open Question:** Can you provide the exact numbering rules from the RSMTS specification for the 21 seed categories? For example, I need to know which categories inherit the 11-digit + check digit rule vs 5-digit vs 6-digit etc. Should the rule be defined at the GRANDPARENT level and inherited, or defined directly at the PARENT/CHILD levels?
+
+## Proposed Changes
+
+### 1. Asset Category Schema Updates
+
+#### `src/asset-categories/schemas/asset-category.schema.ts`
+We will add a nested `IdentificationRule` schema.
+
+```typescript
+export enum IdentificationType {
+  NUMERIC = 'NUMERIC',
+  ALPHANUMERIC = 'ALPHANUMERIC',
+}
+
+@Schema({ _id: false })
+export class IdentificationRule {
+  @Prop({ type: String, enum: IdentificationType, required: true })
+  type: IdentificationType;
+
+  @Prop({ type: Number, required: true })
+  length: number;
+
+  @Prop({ type: Boolean, default: false })
+  checkDigit: boolean;
+}
+
+// In AssetCategory:
+@Prop({ type: IdentificationRule, required: false })
+identificationRule?: IdentificationRule;
+```
+
+### 2. DTO Updates
+We will update `CreateAssetCategoryDto` and `UpdateAssetCategoryDto` to include the optional `identificationRule` object, validating its nested properties using `class-validator` (`@ValidateNested`, `Type`).
+
+### 3. Seed Script Updates
+We will update `seed-asset-categories.ts` to include the specific `identificationRule` for each relevant category once you provide the exact mapping.
+
+*(Note: The `Asset Validation Service` will be built as part of the actual Asset creation module later, which will consume these rules to validate asset IDs).*

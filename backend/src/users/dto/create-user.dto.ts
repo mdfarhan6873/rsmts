@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength, IsBoolean } from 'class-validator';
 import { UserRole } from '../schemas/user.schema.js';
 
 export class CreateUserDto {
@@ -21,4 +21,8 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   remark?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }

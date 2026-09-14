@@ -1,0 +1,7 @@
+- [x] Create backend seed script for `admin@gmail.com`
+- [x] Run seed script successfully
+- [x] Install Axios in frontend
+- [x] Configure `NEXT_PUBLIC_API_URL` environment variable for frontend
+- [x] Create API client `src/services/api.ts` with HttpOnly cookie interceptors
+- [x] Update `src/app/login/page.tsx` to handle authentication securely and capture validation errors
+- [x] Update `src/app/dashboard/page.tsx` with user profile fetching, graceful loading state, and logout functionality

@@ -1,0 +1,88 @@
+# Phase 4: Asset Master (Registration) - FINAL PLAN (Simplified)
+
+We are ready to implement the **Asset Master**, responsible for registering individual physical assets and establishing their initial operational state. Based on our discussion, we will **NOT** implement the strict Indian Railways (IR) wagon number algorithms. Instead, the module will rely entirely on generic validation driven by the Category Master.
+
+## Proposed Changes
+
+---
+
+### Asset Module & Registration Flow
+
+The Asset Master will enforce the registration flow: `Operation → Category hierarchy → Asset Number → Location → Remark`.
+
+#### [NEW] `src/assets/schemas/asset.schema.ts`
+Creates the central Asset entity for tracking individual vehicles, including the `currentPipeline` to establish initial operational state.
+```typescript
+export enum AssetStatus {
+  ACTIVE = 'ACTIVE', // In traffic / yard
+  IN_REPAIR = 'IN_REPAIR',
+  IN_MANUFACTURING = 'IN_MANUFACTURING',
+  CONDEMNED = 'CONDEMNED',
+}
+
+@Schema({ collection: 'assets', timestamps: true })
+export class Asset {
+  @Prop({ type: String, required: true, unique: true, index: true, uppercase: true, trim: true })
+  assetNumber: string;
+
+  @Prop({ type: String, required: true, uppercase: true, trim: true, index: true })
+  categoryCode: string; // Foreign Key to Asset Category
+
+  @Prop({ type: String, required: true, enum: AssetStatus, index: true })
+  status: AssetStatus;
+  
+  @Prop({ type: String, required: true, uppercase: true, trim: true, index: true })
+  currentLocationCode: string; // Foreign Key to Location
+  
+  @Prop({ type: String, required: true, enum: PipelineOperation, index: true })
+  currentPipeline: PipelineOperation;
+
+  @Prop({ type: String, required: true, trim: true })
+  remark: string;
+
+  @Prop({ type: Boolean, default: true, index: true })
+  isActive: boolean;
+}
+```
+
+#### [NEW] `src/assets/assets.service.ts`
+Implements the registration transaction with full cross-master validation:
+1. **Category Validation**: Validates the existence of the selected Category.
+2. **Identification Rule Resolution**: Resolves the Identification Rule from the Category tree (or closest ancestor).
+3. **Generic Number Validation**: Evaluates the `assetNumber` strictly against the `type` (e.g., `NUMERIC`), `length` (e.g., 11), and `checkDigit: false` configuration, without any complex algorithms.
+4. **Uniqueness**: Checks that the `assetNumber` is not a duplicate.
+5. **Location Validation**: Verifies the `currentLocationCode` is a valid, active physical location (not GROUP).
+6. **Routing Eligibility**: Verifies Routing Rules by checking if the Category + Operation is allowed at the Location.
+7. **Status Assignment**: Derives the initial `status` (`IN_REPAIR` or `IN_MANUFACTURING`) from the requested `currentPipeline`.
+
+#### [NEW] `src/assets/assets.controller.ts`
+Exposes the registration endpoint `POST /assets`. Update operations will be restricted to lifecycle/status toggles (`PATCH /assets/:assetNumber/status`) to prevent identity corruption.
+
+#### [NEW] `src/assets/assets.module.ts`
+Binds dependencies and imports `AssetCategoriesModule`, `LocationsModule`, and `RoutingRulesModule`.
+
+#### [MODIFY] `src/app.module.ts`
+Registers `AssetsModule`.
+
+---
+
+### Database Seeding
+#### [NEW] `seed-assets.ts`
+Will seed representative assets mapping to the length-based validation constraints:
+- `WAGON` variants: 11 numeric digits.
+- `LOCO` variants: 5 numeric digits.
+- `CRANE`: 6 numeric digits.
+- `8W_DETC`: 6 numeric digits.
+- `4W_DHTC`: 3 numeric digits.
+
+We will also update `seed-asset-categories.ts` (if needed) to ensure `checkDigit: false` is explicitly set where applicable.
+
+## Verification Plan
+
+### Automated Tests
+- Valid 11-digit numeric Wagon numbers will succeed.
+- Registering a 5-digit Loco will succeed.
+- Attempting to register an 11-character Wagon with alphanumeric characters will fail (Type: NUMERIC).
+- Attempting to register a 10-digit or 12-digit Wagon number will fail (Length: 11).
+- Attempting to use a GROUP location will fail.
+- Attempting to use a mismatching pipeline location will fail.
