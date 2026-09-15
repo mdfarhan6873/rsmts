@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { 
   Globe, 
   TrainFront, 
@@ -78,10 +79,9 @@ export default function LoginPage() {
       {/* Left Panel: Branding & Information */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden flex-col justify-between items-center text-white p-12">
         {/* Background Image */}
-        <div 
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/loginscreenleftpicture.png')" }}
-        />
+        <div className="absolute inset-0 z-0">
+          <Image src="/loginscreenleftpicture.png" alt="Background" fill priority className="object-cover object-center" />
+        </div>
         <div className="absolute inset-0 z-10 bg-gradient-to-br from-blue-950/60 via-slate-900/40 to-slate-900/50" />
 
         {/* Top spacer */}
@@ -171,7 +171,7 @@ export default function LoginPage() {
           {/* Header — logo shown ONLY here */}
           <div className="flex flex-col items-center text-center mb-10">
             <div className="mb-6 flex items-center justify-center">
-              <img src="/logo_bg_removed.png" alt="RSMTS Logo" className="w-16 h-16 object-contain" />
+              <Image src="/logo_bg_removed.png" alt="RSMTS Logo" width={64} height={64} className="object-contain" priority />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to RSMTS</h2>
             <div className="w-12 h-1 bg-blue-600 rounded-full mb-4"></div>

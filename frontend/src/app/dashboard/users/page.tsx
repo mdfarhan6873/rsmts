@@ -112,8 +112,29 @@ function UsersPageContent() {
 
       <div className="space-y-4">
         {loading ? (
-          <div className="p-12 text-center text-sm text-gray-500">
-            Loading users...
+          <div className="space-y-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="bg-white border-2 border-gray-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-6 max-w-5xl animate-pulse">
+                {/* Left Section Skeleton */}
+                <div className="flex-1 space-y-3">
+                  <div className="h-4 w-48 bg-slate-200 rounded" />
+                  <div className="h-4 w-64 bg-slate-100 rounded" />
+                  <div className="h-4 w-56 bg-slate-100 rounded" />
+                </div>
+                
+                {/* Middle Section Skeleton */}
+                <div className="flex-1 space-y-3">
+                  <div className="h-4 w-32 bg-slate-200 rounded" />
+                  <div className="h-6 w-16 bg-slate-200 rounded-full" />
+                </div>
+                
+                {/* Right Section Skeleton */}
+                <div className="flex items-center justify-end md:pl-4 gap-2">
+                  <div className="h-9 w-20 bg-slate-200 rounded-lg" />
+                  <div className="h-9 w-24 bg-slate-200 rounded-lg" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : currentUsers.length === 0 ? (
           <div className="p-12 text-center text-sm text-gray-500">

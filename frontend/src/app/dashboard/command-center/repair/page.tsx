@@ -195,7 +195,29 @@ export default function RepairView() {
         ))}
       </div>
 
-      {loading && <div className="text-gray-500">Loading assets...</div>}
+      {loading && (
+        <div className="flex flex-col gap-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="bg-white border-2 border-gray-200 rounded-lg p-5 flex flex-col sm:flex-row gap-4 animate-pulse">
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-6 w-32 bg-slate-200 rounded" />
+                  <div className="h-5 w-24 bg-slate-200 rounded-full" />
+                </div>
+                <div className="h-4 w-48 bg-slate-100 rounded" />
+                <div className="flex gap-4 mt-2">
+                  <div className="h-4 w-24 bg-slate-100 rounded" />
+                  <div className="h-4 w-24 bg-slate-100 rounded" />
+                </div>
+              </div>
+              <div className="flex flex-row sm:flex-col justify-between sm:justify-center gap-2 border-t sm:border-t-0 pt-3 sm:pt-0 sm:border-l sm:pl-4 border-gray-100">
+                <div className="h-8 w-24 bg-slate-200 rounded" />
+                <div className="h-8 w-24 bg-slate-200 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       {error && <div className="text-red-500">{error}</div>}
 
       {!loading && !error && filteredAssets.length === 0 && (

@@ -93,7 +93,45 @@ export default function AnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="flex-1 flex items-center justify-center text-gray-500">Loading analytics...</div>
+        <div className="space-y-6 animate-pulse">
+          {/* Skeleton Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-lg border-2 border-gray-200 p-6 flex items-center gap-4 h-28">
+                <div className="h-12 w-12 rounded-full bg-slate-200" />
+                <div className="space-y-3">
+                  <div className="h-4 w-24 bg-slate-200 rounded" />
+                  <div className="h-6 w-16 bg-slate-200 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Skeleton Charts Row 1 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg border-2 border-gray-200 p-6 h-[400px]">
+              <div className="h-6 w-48 bg-slate-200 rounded mb-6" />
+              <div className="h-64 w-full bg-slate-100 rounded-full mx-auto max-w-[250px]" />
+            </div>
+            <div className="bg-white rounded-lg border-2 border-gray-200 p-6 h-[400px]">
+              <div className="h-6 w-48 bg-slate-200 rounded mb-6" />
+              <div className="space-y-4">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex gap-4 items-center">
+                    <div className="h-4 w-12 bg-slate-200 rounded" />
+                    <div className="h-6 flex-1 bg-slate-100 rounded" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Skeleton Charts Row 2 */}
+          <div className="bg-white rounded-lg border-2 border-gray-200 p-6 h-[400px]">
+            <div className="h-6 w-64 bg-slate-200 rounded mb-6" />
+            <div className="h-[250px] w-full bg-slate-100 rounded" />
+          </div>
+        </div>
       ) : data ? (
         <div className="space-y-6">
           
