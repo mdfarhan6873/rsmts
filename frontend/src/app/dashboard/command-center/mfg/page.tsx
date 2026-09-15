@@ -192,8 +192,8 @@ export default function MfgView() {
 
       {loading && (
         <div className="flex flex-col gap-4">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="bg-white border-2 border-gray-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-6 max-w-5xl animate-pulse">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white border-2 border-gray-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-5xl animate-pulse">
               {/* Left Section */}
               <div className="flex-1 space-y-2 text-sm">
                 <div className="flex items-start gap-2">

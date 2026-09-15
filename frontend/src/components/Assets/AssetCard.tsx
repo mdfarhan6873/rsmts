@@ -42,7 +42,7 @@ export default function AssetCard({ asset, onViewDetails, onRoute, onDelete, onD
   return (
     <div
       onClick={() => onViewDetails(asset)}
-      className={`bg-white border-2 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between hover:shadow-md transition-all cursor-pointer group gap-6 max-w-5xl ${
+      className={`bg-white border-2 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between hover:shadow-md transition-all cursor-pointer group gap-4 max-w-5xl ${
         isDispatched
           ? 'border-emerald-400 bg-emerald-50/30'
           : isReadyToDispatch
