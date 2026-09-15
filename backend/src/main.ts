@@ -19,7 +19,7 @@ async function bootstrap() {
 
   // Enable CORS — Bulletproof config
   app.enableCors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
       if (process.env.FRONTEND_URL) {
         allowedOrigins.push(process.env.FRONTEND_URL);
