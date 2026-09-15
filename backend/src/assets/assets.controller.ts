@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch, Inject } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, Inject } from '@nestjs/common';
 import { AssetsService } from './assets.service.js';
 import { RegisterAssetDto } from './dto/register-asset.dto.js';
 import { UpdateAssetStatusDto } from './dto/update-asset-status.dto.js';
@@ -34,5 +34,11 @@ export class AssetsController {
     @Body() dto: UpdateAssetStatusDto,
   ) {
     return this.assetsService.updateStatus(assetNumber, dto);
+  }
+
+  @Delete(':assetNumber')
+  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
+  removeAsset(@Param('assetNumber') assetNumber: string) {
+    return this.assetsService.removeAsset(assetNumber);
   }
 }

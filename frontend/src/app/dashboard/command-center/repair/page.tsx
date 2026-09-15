@@ -130,6 +130,17 @@ export default function RepairView() {
     fetchAssets(); // Refresh assets
   };
 
+  const handleDelete = async (asset: Asset) => {
+    if (window.confirm(`Are you sure you want to delete asset ${asset.assetNumber}?`)) {
+      try {
+        await api.delete(`/assets/${asset.assetNumber}`);
+        fetchAssets();
+      } catch (err: any) {
+        alert(err.response?.data?.message || err.message || 'Failed to delete asset');
+      }
+    }
+  };
+
   const tabs: { id: RepairTab; label: string }[] = [
     { id: "ALL", label: "All Repair" },
     { id: "NSY", label: "NSY" },
@@ -176,6 +187,7 @@ export default function RepairView() {
             asset={asset}
             onViewDetails={handleViewDetails}
             onRoute={handleRoute}
+            onDelete={handleDelete}
           />
         ))}
       </div>

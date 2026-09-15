@@ -13,6 +13,8 @@ import { AuthModule } from './auth/auth.module.js';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
+import { SystemModule } from './system/system.module.js';
+import { AnalyticsModule } from './analytics/analytics.module.js';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     AssetsModule,
     MovementsModule,
     AuthModule,
+    SystemModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [

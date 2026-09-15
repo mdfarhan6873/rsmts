@@ -120,6 +120,17 @@ export default function MfgView() {
     fetchAssets(); // Refresh assets
   };
 
+  const handleDelete = async (asset: Asset) => {
+    if (window.confirm(`Are you sure you want to delete asset ${asset.assetNumber}?`)) {
+      try {
+        await api.delete(`/assets/${asset.assetNumber}`);
+        fetchAssets();
+      } catch (err: any) {
+        alert(err.response?.data?.message || err.message || 'Failed to delete asset');
+      }
+    }
+  };
+
   const tabs: { id: MfgTab; label: string }[] = [
     { id: 'ALL', label: 'All MFG' },
     { id: 'GIF', label: 'GIF Shop' },
@@ -167,6 +178,7 @@ export default function MfgView() {
             asset={asset}
             onViewDetails={handleViewDetails}
             onRoute={handleRoute}
+            onDelete={handleDelete}
           />
         ))}
       </div>

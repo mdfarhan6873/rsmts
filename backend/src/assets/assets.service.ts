@@ -118,4 +118,14 @@ export class AssetsService {
 
     return asset;
   }
+
+  async removeAsset(assetNumber: string): Promise<{ deleted: boolean }> {
+    const result = await this.assetModel.deleteOne({ assetNumber: assetNumber.toUpperCase() }).exec();
+    
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(`Asset ${assetNumber} not found`);
+    }
+
+    return { deleted: true };
+  }
 }
