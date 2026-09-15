@@ -25,14 +25,16 @@ export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const isManagementOrAdmin = currentUser?.role === 'SYSTEM_ADMIN' || currentUser?.role === 'MANAGEMENT';
+
   useEffect(() => {
-    if (searchParams.get('add') === 'true') {
+    if (searchParams.get('add') === 'true' && isManagementOrAdmin) {
       setUserToEdit(null);
       setIsModalOpen(true);
       // clean up the URL without causing a full reload
       router.replace('/dashboard/users');
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, isManagementOrAdmin]);
 
   const fetchUsers = async () => {
     try {
@@ -76,8 +78,6 @@ export default function UsersPage() {
   const handleModalSuccess = () => {
     fetchUsers();
   };
-
-  const isManagementOrAdmin = currentUser?.role === 'SYSTEM_ADMIN' || currentUser?.role === 'MANAGEMENT';
 
   // Pagination logic
   const totalPages = Math.ceil(users.length / itemsPerPage);

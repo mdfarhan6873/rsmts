@@ -17,6 +17,7 @@ export default function CommandCenterNav({ searchTerm = "", onSearchChange }: Co
   const router = useRouter();
   const { user } = useAuth();
   const isViewer = user?.role === "VIEWER";
+  const isManagementOrAdmin = user?.role === "SYSTEM_ADMIN" || user?.role === "MANAGEMENT";
   
   const [isAssetModalOpen, setIsAssetModalOpen] = useState(false);
 
@@ -52,15 +53,16 @@ export default function CommandCenterNav({ searchTerm = "", onSearchChange }: Co
           />
         </div>
         <div className="flex items-center gap-4 ml-6">
+          {isManagementOrAdmin && (
+             <button 
+              onClick={() => router.push('/dashboard/users?add=true')}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-600 rounded-md hover:bg-gray-50 focus:outline-none transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              Add User
+            </button>
+          )}
           {!isViewer && (
-            <>
-               <button 
-                onClick={() => router.push('/dashboard/users?add=true')}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-600 rounded-md hover:bg-gray-50 focus:outline-none transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Add User
-              </button>
               <button 
                 onClick={() => setIsAssetModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-600 rounded-md hover:bg-gray-50 focus:outline-none transition-colors"
@@ -68,7 +70,6 @@ export default function CommandCenterNav({ searchTerm = "", onSearchChange }: Co
                 <PackagePlus className="h-4 w-4" />
                 Register Assets
               </button>
-            </>
           )}
         </div>
       </div>
