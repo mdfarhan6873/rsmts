@@ -193,21 +193,44 @@ export default function MfgView() {
       {loading && (
         <div className="flex flex-col gap-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="bg-white border-2 border-gray-200 rounded-lg p-5 flex flex-col sm:flex-row gap-4 animate-pulse">
-              <div className="flex-1 space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="h-6 w-32 bg-slate-200 rounded" />
-                  <div className="h-5 w-24 bg-slate-200 rounded-full" />
+            <div key={i} className="bg-white border-2 border-gray-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-6 max-w-5xl animate-pulse">
+              {/* Left Section */}
+              <div className="flex-1 space-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 min-w-[8rem]">Asset No :</span>
+                  <div className="h-5 w-24 bg-slate-200 rounded" />
                 </div>
-                <div className="h-4 w-48 bg-slate-100 rounded" />
-                <div className="flex gap-4 mt-2">
-                  <div className="h-4 w-24 bg-slate-100 rounded" />
-                  <div className="h-4 w-24 bg-slate-100 rounded" />
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 min-w-[8rem]">Current Location :</span>
+                  <div className="h-5 w-32 bg-slate-200 rounded" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 min-w-[8rem]">Remarks :</span>
+                  <div className="h-5 w-48 bg-slate-100 rounded" />
                 </div>
               </div>
-              <div className="flex flex-row sm:flex-col justify-between sm:justify-center gap-2 border-t sm:border-t-0 pt-3 sm:pt-0 sm:border-l sm:pl-4 border-gray-100">
-                <div className="h-8 w-24 bg-slate-200 rounded" />
-                <div className="h-8 w-24 bg-slate-200 rounded" />
+
+              {/* Middle Section */}
+              <div className="flex-1 space-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 min-w-[7rem]">Pipeline :</span>
+                  <div className="h-5 w-24 bg-slate-200 rounded" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 min-w-[7rem]">Category :</span>
+                  <div className="h-5 w-20 bg-slate-200 rounded" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 min-w-[7rem]">Status :</span>
+                  <div className="h-6 w-24 bg-slate-200 rounded-full" />
+                </div>
+              </div>
+
+              {/* Right Section */}
+              <div className="flex flex-col items-end justify-center md:pl-4 gap-2">
+                <div className="h-9 w-36 bg-slate-200 rounded-lg" />
+                <div className="h-9 w-32 bg-slate-200 rounded-lg" />
+                <div className="h-9 w-20 bg-slate-200 rounded-lg" />
               </div>
             </div>
           ))}
