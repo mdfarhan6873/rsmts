@@ -17,13 +17,24 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS — allow Netlify frontend in production, localhost in dev
-  const allowedOrigins = process.env.FRONTEND_URL
-    ? [process.env.FRONTEND_URL, 'http://localhost:3000', 'http://localhost:3001']
-    : true; // allow all in dev if env not set
-
+  // Enable CORS — Bulletproof config
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+      if (process.env.FRONTEND_URL) {
+        allowedOrigins.push(process.env.FRONTEND_URL);
+      }
+      
+      // Allow if origin is in the list, or if it's not a browser request (!origin)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else if (process.env.NODE_ENV !== 'production') {
+        // In dev, if frontend URL isn't configured, just reflect the origin
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 
