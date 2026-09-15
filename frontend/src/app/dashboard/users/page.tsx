@@ -8,7 +8,9 @@ import UserFormModal, { User } from '@/components/Users/UserFormModal';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useToast } from '@/contexts/ToastContext';
 
-export default function UsersPage() {
+import { Suspense } from "react";
+
+function UsersPageContent() {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -237,5 +239,13 @@ export default function UsersPage() {
         userToEdit={userToEdit}
       />
     </div>
+  );
+}
+
+export default function UsersPage() {
+  return (
+    <Suspense fallback={<div className="p-8">Loading users...</div>}>
+      <UsersPageContent />
+    </Suspense>
   );
 }

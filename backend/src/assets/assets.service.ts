@@ -1,4 +1,4 @@
-import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Asset, AssetDocument, AssetStatus } from './schemas/asset.schema.js';
@@ -10,6 +10,8 @@ import { LocationType } from '../locations/schemas/location.schema.js';
 import { PipelineOperation } from '../routing-rules/schemas/routing-rule.schema.js';
 import { IdentificationType } from '../asset-categories/schemas/asset-category.schema.js';
 import { UpdateAssetStatusDto } from './dto/update-asset-status.dto.js';
+import { CurrentUserPayload } from '../auth/decorators/current-user.decorator.js';
+import { UserRole } from '../users/schemas/user.schema.js';
 
 @Injectable()
 export class AssetsService {
@@ -20,7 +22,14 @@ export class AssetsService {
     @Inject(RoutingRulesService) private routingRulesService: RoutingRulesService,
   ) {}
 
-  async registerAsset(dto: RegisterAssetDto): Promise<Asset> {
+  async registerAsset(dto: RegisterAssetDto, user: CurrentUserPayload): Promise<Asset> {
+    if (user.role === UserRole.MANUFACTURING_SUPERVISOR && dto.operation !== PipelineOperation.MANUFACTURING) {
+      throw new ForbiddenException('Manufacturing Supervisors can only register assets in the MANUFACTURING pipeline.');
+    }
+    if (user.role === UserRole.REPAIR_SUPERVISOR && dto.operation !== PipelineOperation.REPAIRING) {
+      throw new ForbiddenException('Repair Supervisors can only register assets in the REPAIR pipeline.');
+    }
+
     // 1 & 2. Verify Category exists and is active
     const category = await this.assetCategoriesService.findOne(dto.categoryCode);
     if (!category.isActive) {
@@ -93,39 +102,63 @@ export class AssetsService {
     return newAsset.save();
   }
 
-  async findAll(): Promise<Asset[]> {
-    return this.assetModel.find().sort({ updatedAt: -1 }).exec();
+  async findAll(user: CurrentUserPayload): Promise<Asset[]> {
+    const filter: any = {};
+    if (user.role === UserRole.MANUFACTURING_SUPERVISOR) {
+      filter.currentPipeline = PipelineOperation.MANUFACTURING;
+    } else if (user.role === UserRole.REPAIR_SUPERVISOR) {
+      filter.currentPipeline = PipelineOperation.REPAIRING;
+    }
+    return this.assetModel.find(filter).sort({ updatedAt: -1 }).exec();
   }
 
-  async findOne(assetNumber: string): Promise<Asset> {
+  async findOne(assetNumber: string, user: CurrentUserPayload): Promise<Asset> {
     const asset = await this.assetModel.findOne({ assetNumber: assetNumber.toUpperCase() }).exec();
     if (!asset) {
       throw new NotFoundException(`Asset ${assetNumber} not found`);
     }
+
+    if (user.role === UserRole.MANUFACTURING_SUPERVISOR && asset.currentPipeline !== PipelineOperation.MANUFACTURING) {
+      throw new ForbiddenException('Manufacturing Supervisors can only access assets in the MANUFACTURING pipeline.');
+    }
+    if (user.role === UserRole.REPAIR_SUPERVISOR && asset.currentPipeline !== PipelineOperation.REPAIRING) {
+      throw new ForbiddenException('Repair Supervisors can only access assets in the REPAIR pipeline.');
+    }
+
     return asset;
   }
 
-  async updateStatus(assetNumber: string, dto: UpdateAssetStatusDto): Promise<Asset> {
-    const asset = await this.assetModel.findOneAndUpdate(
-      { assetNumber: assetNumber.toUpperCase() },
-      { $set: { status: dto.status } },
-      { new: true }
-    ).exec();
-
+  async updateStatus(assetNumber: string, dto: UpdateAssetStatusDto, user: CurrentUserPayload): Promise<Asset> {
+    const asset = await this.assetModel.findOne({ assetNumber: assetNumber.toUpperCase() }).exec();
     if (!asset) {
       throw new NotFoundException(`Asset ${assetNumber} not found`);
     }
 
-    return asset;
+    if (user.role === UserRole.MANUFACTURING_SUPERVISOR && asset.currentPipeline !== PipelineOperation.MANUFACTURING) {
+      throw new ForbiddenException('Manufacturing Supervisors can only update assets in the MANUFACTURING pipeline.');
+    }
+    if (user.role === UserRole.REPAIR_SUPERVISOR && asset.currentPipeline !== PipelineOperation.REPAIRING) {
+      throw new ForbiddenException('Repair Supervisors can only update assets in the REPAIR pipeline.');
+    }
+
+    asset.status = dto.status;
+    return asset.save();
   }
 
-  async removeAsset(assetNumber: string): Promise<{ deleted: boolean }> {
-    const result = await this.assetModel.deleteOne({ assetNumber: assetNumber.toUpperCase() }).exec();
-    
-    if (result.deletedCount === 0) {
+  async removeAsset(assetNumber: string, user: CurrentUserPayload): Promise<{ deleted: boolean }> {
+    const asset = await this.assetModel.findOne({ assetNumber: assetNumber.toUpperCase() }).exec();
+    if (!asset) {
       throw new NotFoundException(`Asset ${assetNumber} not found`);
     }
 
+    if (user.role === UserRole.MANUFACTURING_SUPERVISOR && asset.currentPipeline !== PipelineOperation.MANUFACTURING) {
+      throw new ForbiddenException('Manufacturing Supervisors can only delete assets in the MANUFACTURING pipeline.');
+    }
+    if (user.role === UserRole.REPAIR_SUPERVISOR && asset.currentPipeline !== PipelineOperation.REPAIRING) {
+      throw new ForbiddenException('Repair Supervisors can only delete assets in the REPAIR pipeline.');
+    }
+
+    await this.assetModel.deleteOne({ assetNumber: assetNumber.toUpperCase() }).exec();
     return { deleted: true };
   }
 }

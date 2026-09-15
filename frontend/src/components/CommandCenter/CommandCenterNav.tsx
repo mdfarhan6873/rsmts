@@ -21,11 +21,17 @@ export default function CommandCenterNav({ searchTerm = "", onSearchChange }: Co
   
   const [isAssetModalOpen, setIsAssetModalOpen] = useState(false);
 
-  const tabs = [
+  let tabs = [
     { name: "Repair", href: "/dashboard/command-center/repair" },
     { name: "MFG", href: "/dashboard/command-center/mfg" },
     { name: "Locations Topology", href: "/dashboard/command-center/locations" },
   ];
+
+  if (user?.role === "MANUFACTURING_SUPERVISOR") {
+    tabs = tabs.filter(t => t.name !== "Repair");
+  } else if (user?.role === "REPAIR_SUPERVISOR") {
+    tabs = tabs.filter(t => t.name !== "MFG");
+  }
 
   const handleAssetSuccess = () => {
     // You could route based on what was created or just refresh the page

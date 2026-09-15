@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './src/app.module.js';
 import { AssetsService } from './src/assets/assets.service.js';
 import { PipelineOperation } from './src/routing-rules/schemas/routing-rule.schema.js';
+import { UserRole } from './src/users/schemas/user.schema.js';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -18,6 +19,12 @@ async function bootstrap() {
   // ==========================================
   let pass = true;
 
+  const adminUser = {
+    _id: 'seed',
+    email: 'seed@system.local',
+    role: UserRole.SYSTEM_ADMIN
+  };
+
   try {
     await assetsService.registerAsset({
       operation: PipelineOperation.REPAIRING,
@@ -25,7 +32,7 @@ async function bootstrap() {
       assetNumber: '12345ABCDEF', // ALPHANUMERIC instead of NUMERIC
       currentLocationCode: 'WRS_1',
       remark: 'Test alphanumeric failure',
-    });
+    }, adminUser);
     console.error('❌ Failed: Accepted alphanumeric for numeric category.');
     pass = false;
   } catch(e: any) {
@@ -39,7 +46,7 @@ async function bootstrap() {
       assetNumber: '1234567890', // 10 digits instead of 11
       currentLocationCode: 'WRS_1',
       remark: 'Test short length failure',
-    });
+    }, adminUser);
     console.error('❌ Failed: Accepted incorrect length asset number.');
     pass = false;
   } catch(e: any) {
@@ -54,7 +61,7 @@ async function bootstrap() {
       assetNumber: '11111111111',
       currentLocationCode: 'CRANE_REPAIR_SHOP',
       remark: 'Test routing',
-    });
+    }, adminUser);
     console.error('❌ Failed: Accepted invalid routing location.');
     pass = false;
   } catch(e: any) {
@@ -68,7 +75,7 @@ async function bootstrap() {
       assetNumber: '12345678901',
       currentLocationCode: 'NORTH_YARD', // GROUP location
       remark: 'Test GROUP location',
-    });
+    }, adminUser);
     console.error('❌ Failed: Accepted GROUP location.');
     pass = false;
   } catch(e: any) {
@@ -92,7 +99,7 @@ async function bootstrap() {
     assetNumber: '12345678901',
     currentLocationCode: 'WRS_1',
     remark: 'Received for repair',
-  });
+  }, adminUser);
 
   // 5-digit Loco
   await assetsService.registerAsset({
@@ -101,7 +108,7 @@ async function bootstrap() {
     assetNumber: '12345',
     currentLocationCode: 'DPS',
     remark: 'Routine maintenance',
-  });
+  }, adminUser);
 
   // 6-digit Tower Car
   await assetsService.registerAsset({
@@ -110,9 +117,9 @@ async function bootstrap() {
     assetNumber: '123456',
     currentLocationCode: 'TOWER_CAR_LINE',
     remark: 'Tower car repair',
-  });
+  }, adminUser);
 
-  const allAssets = await assetsService.findAll();
+  const allAssets = await assetsService.findAll(adminUser);
   console.log(`\n🎉 SEED SUCCESSFUL! Total Assets: ${allAssets.length}`);
 
   await app.close();

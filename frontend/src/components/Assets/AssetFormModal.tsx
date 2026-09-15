@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import api from '@/services/api';
 import { useToast } from '@/contexts/ToastContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface Asset {
   assetNumber: string;
@@ -49,6 +50,7 @@ export default function AssetFormModal({ isOpen, onClose, onSuccess, assetToEdit
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
+  const { user } = useAuth();
 
   // Form Fields
   const [operation, setOperation] = useState('REPAIRING');
@@ -99,7 +101,8 @@ export default function AssetFormModal({ isOpen, onClose, onSuccess, assetToEdit
   };
 
   const resetForm = () => {
-    setOperation('REPAIRING');
+    const defaultOp = user?.role === 'MANUFACTURING_SUPERVISOR' ? 'MANUFACTURING' : 'REPAIRING';
+    setOperation(defaultOp);
     setAssetNumber('');
     setRemark('');
     setSelectedGrandparent('');
@@ -314,25 +317,29 @@ export default function AssetFormModal({ isOpen, onClose, onSuccess, assetToEdit
               <div>
                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Pipeline</label>
                 <div className="flex gap-3">
-                  {['REPAIRING', 'MANUFACTURING'].map(op => (
-                    <button
-                      key={op}
-                      type="button"
-                      onClick={() => {
-                        setOperation(op);
-                        setLocL1('');
-                        setLocL2('');
-                        setLocL3('');
-                      }}
-                      className={`px-5 py-2.5 rounded-md text-sm font-medium border-2 transition-colors ${
-                        operation === op
-                          ? 'border-gray-900 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {op}
-                    </button>
-                  ))}
+                  {['REPAIRING', 'MANUFACTURING'].map(op => {
+                    if (user?.role === 'MANUFACTURING_SUPERVISOR' && op !== 'MANUFACTURING') return null;
+                    if (user?.role === 'REPAIR_SUPERVISOR' && op !== 'REPAIRING') return null;
+                    return (
+                      <button
+                        key={op}
+                        type="button"
+                        onClick={() => {
+                          setOperation(op);
+                          setLocL1('');
+                          setLocL2('');
+                          setLocL3('');
+                        }}
+                        className={`px-5 py-2.5 rounded-md text-sm font-medium border-2 transition-colors ${
+                          operation === op
+                            ? 'border-gray-900 bg-gray-200 text-gray-900'
+                            : 'border-gray-600 bg-white text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {op}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
