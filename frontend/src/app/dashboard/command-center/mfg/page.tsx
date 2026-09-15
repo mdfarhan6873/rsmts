@@ -196,32 +196,32 @@ export default function MfgView() {
             <div key={i} className="bg-white border-2 border-gray-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-6 max-w-5xl animate-pulse">
               {/* Left Section */}
               <div className="flex-1 space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 min-w-[8rem]">Asset No :</span>
-                  <div className="h-5 w-24 bg-slate-200 rounded" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 min-w-[8rem]">Current Location :</span>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-32">Asset No :</span>
                   <div className="h-5 w-32 bg-slate-200 rounded" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 min-w-[8rem]">Remarks :</span>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-32">Current Location :</span>
+                  <div className="h-5 w-24 bg-slate-200 rounded" />
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-32">Remarks :</span>
                   <div className="h-5 w-48 bg-slate-100 rounded" />
                 </div>
               </div>
 
               {/* Middle Section */}
               <div className="flex-1 space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 min-w-[7rem]">Pipeline :</span>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-28">Pipeline :</span>
                   <div className="h-5 w-24 bg-slate-200 rounded" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 min-w-[7rem]">Category :</span>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-28">Category :</span>
                   <div className="h-5 w-20 bg-slate-200 rounded" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-400 min-w-[7rem]">Status :</span>
+                  <span className="text-gray-500 min-w-28">Status :</span>
                   <div className="h-6 w-24 bg-slate-200 rounded-full" />
                 </div>
               </div>
