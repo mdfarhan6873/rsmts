@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Connection } from 'mongoose';
-import { InjectConnection } from '@nestjs/mongoose';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 import { AuditLog, AuditLogDocument } from './schemas/audit-log.schema.js';
 
 @Injectable()
 export class SystemService {
   constructor(
-    @InjectModel(AuditLog.name) private auditLogModel: Model<AuditLogDocument>,
-    @InjectConnection() private connection: Connection,
+    @InjectModel(AuditLog.name) private auditLogModel: mongoose.Model<AuditLogDocument>,
+    @InjectConnection() private connection: mongoose.Connection,
   ) {}
 
   async getHealthStatus() {

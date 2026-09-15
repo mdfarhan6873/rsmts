@@ -1,7 +1,8 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
 
-export type LocationDocument = HydratedDocument<Location>;
+
+export type LocationDocument = mongoose.HydratedDocument<Location>;
 
 export enum LocationCategory {
   COMMON = 'COMMON',
@@ -151,3 +152,4 @@ LocationSchema.index({
   role: 1,
   isActive: 1,
 });
+

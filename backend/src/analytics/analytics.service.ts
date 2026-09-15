@@ -1,6 +1,7 @@
+import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+
 import { Asset, AssetDocument, AssetStatus } from '../assets/schemas/asset.schema.js';
 import { MovementLog, MovementLogDocument } from '../movements/schemas/movement-log.schema.js';
 import { PipelineOperation } from '../routing-rules/schemas/routing-rule.schema.js';
@@ -8,8 +9,8 @@ import { PipelineOperation } from '../routing-rules/schemas/routing-rule.schema.
 @Injectable()
 export class AnalyticsService {
   constructor(
-    @InjectModel(Asset.name) private assetModel: Model<AssetDocument>,
-    @InjectModel(MovementLog.name) private movementLogModel: Model<MovementLogDocument>,
+    @InjectModel(Asset.name) private assetModel: mongoose.Model<AssetDocument>,
+    @InjectModel(MovementLog.name) private movementLogModel: mongoose.Model<MovementLogDocument>,
   ) {}
 
   async getDashboardData(pipeline: string, startDateStr: string, endDateStr: string) {
@@ -78,3 +79,4 @@ export class AnalyticsService {
     };
   }
 }
+

@@ -1,5 +1,6 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+
 
 export enum PipelineOperation {
   REPAIRING = 'REPAIRING',
@@ -49,7 +50,7 @@ export class RoutingRule {
   remark: string;
 }
 
-export type RoutingRuleDocument = RoutingRule & Document;
+export type RoutingRuleDocument = RoutingRule & mongoose.Document;
 
 export const RoutingRuleSchema = SchemaFactory.createForClass(RoutingRule);
 
@@ -58,3 +59,4 @@ RoutingRuleSchema.index(
   { assetCategoryCode: 1, pipeline: 1, locationCode: 1 },
   { unique: true }
 );
+

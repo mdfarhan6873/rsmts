@@ -1,5 +1,6 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+
 
 @Schema({ collection: 'audit_logs', timestamps: true })
 export class AuditLog {
@@ -22,5 +23,6 @@ export class AuditLog {
   payload: any;
 }
 
-export type AuditLogDocument = AuditLog & Document;
+export type AuditLogDocument = AuditLog & mongoose.Document;
 export const AuditLogSchema = SchemaFactory.createForClass(AuditLog);
+

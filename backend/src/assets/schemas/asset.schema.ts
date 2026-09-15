@@ -1,5 +1,6 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+
 import { PipelineOperation } from '../../routing-rules/schemas/routing-rule.schema.js';
 
 export enum AssetStatus {
@@ -35,5 +36,6 @@ export class Asset {
   isActive: boolean;
 }
 
-export type AssetDocument = Asset & Document;
+export type AssetDocument = Asset & mongoose.Document;
 export const AssetSchema = SchemaFactory.createForClass(Asset);
+

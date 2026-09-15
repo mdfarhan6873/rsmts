@@ -1,6 +1,7 @@
+import mongoose from 'mongoose';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuditLog, AuditLogDocument } from '../schemas/audit-log.schema.js';
@@ -8,7 +9,7 @@ import { AuditLog, AuditLogDocument } from '../schemas/audit-log.schema.js';
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
   constructor(
-    @InjectModel(AuditLog.name) private auditLogModel: Model<AuditLogDocument>,
+    @InjectModel(AuditLog.name) private auditLogModel: mongoose.Model<AuditLogDocument>,
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -65,3 +66,4 @@ export class AuditInterceptor implements NestInterceptor {
     return next.handle();
   }
 }
+

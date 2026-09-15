@@ -1,7 +1,8 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
 
-export type AssetCategoryDocument = HydratedDocument<AssetCategory>;
+
+export type AssetCategoryDocument = mongoose.HydratedDocument<AssetCategory>;
 
 export enum AssetCategoryLevel {
   GRANDPARENT = 'GRANDPARENT',
@@ -80,3 +81,4 @@ export const AssetCategorySchema = SchemaFactory.createForClass(AssetCategory);
 // Indexes
 AssetCategorySchema.index({ parentCode: 1 });
 AssetCategorySchema.index({ level: 1 });
+

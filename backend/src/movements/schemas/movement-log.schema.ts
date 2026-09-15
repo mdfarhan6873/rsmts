@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { Asset } from '../../assets/schemas/asset.schema.js';
 import { User } from '../../users/schemas/user.schema.js';
 
-export type MovementLogDocument = MovementLog & Document;
+export type MovementLogDocument = MovementLog & mongoose.Document;
 
 @Schema({
   collection: 'movement_logs',
@@ -16,7 +16,7 @@ export class MovementLog {
     required: true,
     index: true,
   })
-  assetId: Types.ObjectId;
+  assetId: mongoose.Types.ObjectId;
 
   @Prop({
     type: String,
@@ -42,7 +42,7 @@ export class MovementLog {
     required: true,
     index: true,
   })
-  movedBy: Types.ObjectId;
+  movedBy: mongoose.Types.ObjectId;
 
   @Prop({
     type: Date,
@@ -61,3 +61,4 @@ export class MovementLog {
 }
 
 export const MovementLogSchema = SchemaFactory.createForClass(MovementLog);
+

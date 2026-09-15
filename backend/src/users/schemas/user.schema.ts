@@ -1,7 +1,8 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
 
-export type UserDocument = HydratedDocument<User>;
+
+export type UserDocument = mongoose.HydratedDocument<User>;
 
 export enum UserRole {
   SYSTEM_ADMIN = 'SYSTEM_ADMIN',
@@ -18,7 +19,7 @@ export enum UserRole {
   timestamps: true,
 })
 export class User {
-  _id: Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({
     type: String,
@@ -68,3 +69,4 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+

@@ -1,12 +1,13 @@
+import mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
 
-export type RefreshSessionDocument = RefreshSession & Document;
+
+export type RefreshSessionDocument = RefreshSession & mongoose.Document;
 
 @Schema({ timestamps: true })
 export class RefreshSession {
-  @Prop({ type: Types.ObjectId, required: true, ref: 'User' })
-  userId: Types.ObjectId;
+  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'User' })
+  userId: mongoose.Types.ObjectId;
 
   @Prop({ type: String, required: true })
   tokenHash: string;
@@ -19,3 +20,4 @@ export class RefreshSession {
 }
 
 export const RefreshSessionSchema = SchemaFactory.createForClass(RefreshSession);
+
