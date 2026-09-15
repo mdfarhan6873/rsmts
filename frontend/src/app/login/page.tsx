@@ -72,28 +72,21 @@ export default function LoginPage() {
       
       {/* Left Panel: Branding & Information */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden flex-col justify-between items-center text-white p-12">
-        {/* Background Image Setup - Using a dark blue gradient overlay on top of the image */}
+        {/* Background Image */}
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/loginscreenleftpicture.png')" }}
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-br from-blue-950/60 via-slate-900/40 to-slate-900/50" />
 
-        {/* Top Spacer */}
-        <div className="relative z-20 w-full flex justify-start">
-           {/* If any top-left logo is needed, it goes here */}
-        </div>
+        {/* Top spacer */}
+        <div className="relative z-20 w-full" />
 
-        {/* Center Content */}
+        {/* Center Content — NO logo here */}
         <div className="relative z-20 flex flex-col items-center text-center mt-12">
-          {/* Indian Railways Logo */}
-          <div className="w-24 h-24 flex items-center justify-center mb-6">
-            <img src="/logo_bg_removed.png" alt="Indian Railways Logo" className="w-full h-full object-contain" />
-          </div>
-          
           <h1 className="text-6xl font-bold tracking-tight mb-4">RSMTS</h1>
           <p className="text-xl font-medium text-slate-200">
-            Rolling Stock Movement & Tracking System
+            Rolling Stock Movement &amp; Tracking System
           </p>
           <p className="text-lg text-slate-400 mt-2">
             Jamalpur Workshop (JMPW)
@@ -105,8 +98,8 @@ export default function LoginPage() {
           {/* Features Grid */}
           <div className="grid grid-cols-4 gap-6 mb-12 text-center border-t border-white/10 pt-8">
             <div className="flex flex-col items-center">
-              <div className="w-12 h-12 flex items-center justify-center mb-3">
-                <img src="/logo_bg_removed.png" alt="Track Logo" className="w-full h-full object-contain" />
+              <div className="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center mb-3">
+                <TrainFront size={24} className="text-blue-400" />
               </div>
               <h3 className="font-semibold text-sm">Track</h3>
               <p className="text-xs text-slate-400 mt-1">Real-time tracking of rolling stock</p>
@@ -123,7 +116,7 @@ export default function LoginPage() {
                 <ShieldCheck size={24} className="text-blue-400" />
               </div>
               <h3 className="font-semibold text-sm">Secure</h3>
-              <p className="text-xs text-slate-400 mt-1">Role-based access & data security</p>
+              <p className="text-xs text-slate-400 mt-1">Role-based access &amp; data security</p>
             </div>
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center mb-3">
@@ -135,15 +128,15 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-end justify-between">
-            {/* Secure Admin Access Card */}
+            {/* Secure Access Card */}
             <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-xl p-4 flex gap-4 max-w-sm">
               <div className="mt-1">
                 <ShieldCheck className="text-blue-400" size={24} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-white">Secure Admin Access</h4>
+                <h4 className="font-semibold text-sm text-white">Secure Role-Based Access</h4>
                 <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                  This portal is restricted to authorized administrators only. 
+                  Access is granted based on your assigned role. 
                   All activities are monitored and recorded.
                 </p>
               </div>
@@ -170,14 +163,16 @@ export default function LoginPage() {
         </div>
 
         <div className="w-full max-w-md">
-          {/* Header */}
+          {/* Header — logo shown ONLY here */}
           <div className="flex flex-col items-center text-center mb-10">
             <div className="mb-6 flex items-center justify-center">
-              <img src="/logo_bg_removed.png" alt="Admin Logo" className="w-16 h-16 object-contain" />
+              <img src="/logo_bg_removed.png" alt="RSMTS Logo" className="w-16 h-16 object-contain" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Administrator Login</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to RSMTS</h2>
             <div className="w-12 h-1 bg-blue-600 rounded-full mb-4"></div>
-            <p className="text-slate-500">Sign in to access the <span className="font-semibold text-slate-700">RSMTS</span> Admin Dashboard</p>
+            <p className="text-slate-500">
+              Sign in to access the <span className="font-semibold text-slate-700">RSMTS</span> Dashboard
+            </p>
           </div>
 
           {/* Form */}
@@ -266,7 +261,6 @@ export default function LoginPage() {
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
-
 
           </form>
 
