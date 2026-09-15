@@ -87,6 +87,19 @@ export class MovementsService {
 
         // 5. Update Asset's current location
         asset.currentLocationCode = toLocationCode;
+
+        // 6. If asset was in a dispatch state, reallocating it resets its status
+        //    back to the active pipeline status (re-entering workshop flow).
+        if (
+          asset.status === AssetStatus.READY_TO_DISPATCH ||
+          asset.status === AssetStatus.DISPATCHED
+        ) {
+          asset.status =
+            asset.currentPipeline === 'MANUFACTURING'
+              ? AssetStatus.IN_MANUFACTURING
+              : AssetStatus.IN_REPAIR;
+        }
+
         await asset.save({ session });
 
         result = movementLog;
