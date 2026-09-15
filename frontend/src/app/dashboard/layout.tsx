@@ -15,7 +15,7 @@ export default function DashboardLayout({
           <div className="flex justify-end items-center px-6 pt-4 bg-white">
             <TopHeader />
           </div>
-          <main className="flex-1 overflow-y-auto bg-white p-6 pt-2">
+          <main className="flex flex-col flex-1 overflow-y-auto bg-white p-6 pt-2">
             {children}
           </main>
         </div>

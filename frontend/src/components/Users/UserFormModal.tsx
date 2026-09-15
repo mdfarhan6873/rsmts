@@ -5,6 +5,8 @@ import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/services/api';
 
+console.log("UserFormModal loaded with new UI");
+
 export interface User {
   _id: string;
   name: string;
@@ -101,13 +103,13 @@ export default function UserFormModal({ isOpen, onClose, onSuccess, userToEdit }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/60 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-md bg-white border-2 border-gray-600 rounded-md shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b-2 border-gray-600 bg-white">
+          <h3 className="text-lg font-semibold text-gray-900">
             {userToEdit ? 'Edit User' : 'Add User'}
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+          </h3>
+          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-900 transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -120,55 +122,51 @@ export default function UserFormModal({ isOpen, onClose, onSuccess, userToEdit }
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
             <input
               type="text"
               name="name"
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+              className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm"
               placeholder="John Doe"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Email Address</label>
             <input
               type="email"
               name="email"
               required
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+              className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm"
               placeholder="john@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password {userToEdit && <span className="text-xs text-gray-400 font-normal">(Leave blank to keep unchanged)</span>}
-            </label>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Password</label>
             <input
               type="password"
               name="password"
               required={!userToEdit}
-              minLength={6}
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-              placeholder={userToEdit ? '••••••••' : 'Minimum 6 characters'}
+              className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm"
+              placeholder={userToEdit ? "Leave blank to keep unchanged" : "Minimum 6 characters"}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Role</label>
             <select
               name="role"
-              required
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 sm:text-sm bg-white"
+              className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm"
             >
               <option value="SYSTEM_ADMIN">System Admin</option>
               <option value="MANAGEMENT">Management</option>
@@ -181,45 +179,45 @@ export default function UserFormModal({ isOpen, onClose, onSuccess, userToEdit }
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Remarks (Optional)</label>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Remarks (Optional)</label>
             <textarea
               name="remark"
-              rows={2}
+              rows={3}
               value={formData.remark}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+              className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm resize-none"
               placeholder="Any additional notes..."
             />
           </div>
 
-          <div className="flex items-center mt-2">
+          <div className="flex items-center pt-2">
             <input
+              type="checkbox"
               id="isActive"
               name="isActive"
-              type="checkbox"
               checked={formData.isActive}
               onChange={handleChange}
-              className="h-4 w-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900"
+              className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
             />
             <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
               Active User Account
             </label>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-6">
+          <div className="flex justify-end gap-3 pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none transition-colors"
+              className="px-6 py-2.5 rounded-md border-2 border-gray-600 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium text-white bg-gray-900 border border-transparent rounded-md hover:bg-gray-800 focus:outline-none transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 rounded-md border-2 border-gray-900 bg-gray-900 text-sm font-medium text-white hover:bg-gray-800 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Saving...' : (userToEdit ? 'Update User' : 'Create User')}
+              {loading ? 'Saving...' : userToEdit ? 'Save Changes' : 'Create User'}
             </button>
           </div>
         </form>

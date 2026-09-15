@@ -94,7 +94,7 @@ export class AssetsService {
   }
 
   async findAll(): Promise<Asset[]> {
-    return this.assetModel.find().exec();
+    return this.assetModel.find().sort({ updatedAt: -1 }).exec();
   }
 
   async findOne(assetNumber: string): Promise<Asset> {

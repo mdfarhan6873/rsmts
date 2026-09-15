@@ -85,21 +85,14 @@ export default function RouteRerouteDrawer({
   if (!isOpen || !asset) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Overlay */}
-      <div 
-        className="absolute inset-0 bg-gray-900/20 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-      
-      {/* Drawer */}
-      <div className="relative w-full max-w-md h-full bg-white shadow-xl flex flex-col transform transition-transform duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/60 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-md bg-white border-2 border-gray-600 rounded-md shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">Route / Reroute Asset</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b-2 border-gray-600 bg-white">
+          <h3 className="text-lg font-semibold text-gray-900">Route / Reroute Asset</h3>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -131,7 +124,7 @@ export default function RouteRerouteDrawer({
             )}
 
             <div>
-              <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="destination" className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
                 Destination <span className="text-red-500">*</span>
               </label>
               
@@ -149,7 +142,7 @@ export default function RouteRerouteDrawer({
                   required
                   value={selectedDestination}
                   onChange={(e) => setSelectedDestination(e.target.value)}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                  className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm"
                 >
                   <option value="" disabled>Select allowed location</option>
                   {destinations.map(dest => (
@@ -160,7 +153,7 @@ export default function RouteRerouteDrawer({
             </div>
 
             <div>
-              <label htmlFor="remark" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="remark" className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
                 Remark <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -170,22 +163,22 @@ export default function RouteRerouteDrawer({
                 value={remark}
                 onChange={(e) => setRemark(e.target.value)}
                 placeholder="Enter reason for movement..."
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white resize-none"
+                className="block w-full border-2 border-gray-600 rounded-md p-3 focus:outline-none focus:border-gray-900 bg-white transition-colors sm:text-sm resize-none"
               />
             </div>
 
-            <div className="pt-4 border-t border-gray-100 flex gap-3 justify-end">
+            <div className="pt-4 flex gap-3 justify-end">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-900"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting || loadingDestinations || destinations.length === 0}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? 'Moving...' : 'Move Asset'}
               </button>

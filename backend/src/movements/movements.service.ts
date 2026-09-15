@@ -44,10 +44,6 @@ export class MovementsService {
 
         const fromLocationCode = asset.currentLocationCode;
 
-        if (fromLocationCode === toLocationCode) {
-          throw new BadRequestException(`Asset is already at location ${toLocationCode}.`);
-        }
-
         // 2. Validate destination exists and is physical
         const toLocation = await this.locationsService.findOne(toLocationCode);
         if (!toLocation) {

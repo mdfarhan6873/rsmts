@@ -7,7 +7,7 @@ export interface Asset {
   currentLocationCode: string;
   currentPipeline: string;
   status: string;
-  remarks?: string;
+  remark?: string;
   movementsCount?: number;
 }
 
@@ -19,57 +19,46 @@ interface AssetCardProps {
 
 export default function AssetCard({ asset, onViewDetails, onRoute }: AssetCardProps) {
   return (
-    <div className="bg-white border-2 border-gray-300 rounded-md p-4 flex flex-col hover:border-gray-900 transition-colors">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <span className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Asset No</span>
-          <span className="font-bold text-gray-900">{asset.assetNumber}</span>
+    <div 
+      onClick={() => onViewDetails(asset)}
+      className="bg-white border-2 border-gray-600 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between hover:border-gray-900 hover:shadow-md transition-all cursor-pointer group gap-6 max-w-5xl"
+    >
+      {/* Left Section */}
+      <div className="flex-1 space-y-2 text-sm">
+        <div className="flex items-start gap-2">
+          <span className="text-gray-500 min-w-32">Asset No :</span>
+          <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{asset.assetNumber}</span>
         </div>
-        <button
-          onClick={() => onRoute(asset)}
-          className="text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded border border-gray-300 transition-colors"
-        >
-          Route / Reroute
-        </button>
+        <div className="flex items-start gap-2">
+          <span className="text-gray-500 min-w-32">Current Location :</span>
+          <span className="font-medium text-gray-900">{asset.currentLocationCode}</span>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="text-gray-500 min-w-32">Remarks :</span>
+          <span className="text-gray-700 line-clamp-1">{asset.remark || '-'}</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <span className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Current Location</span>
-          <span className="text-sm font-medium text-gray-900">{asset.currentLocationCode}</span>
-        </div>
-        <div>
-          <span className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Pipeline</span>
-          <span className="text-sm text-gray-900">{asset.currentPipeline}</span>
-        </div>
-        <div>
-          <span className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Category</span>
-          <span className="text-sm text-gray-900">{asset.categoryCode}</span>
-        </div>
-        <div>
-          <span className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Status</span>
-          <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
-            {asset.status}
+      {/* Middle Section */}
+      <div className="flex-1 space-y-2 text-sm">
+        <div className="flex items-start gap-2">
+          <span className="text-gray-500 min-w-28">Assets Details :</span>
+          <span className="text-gray-900 font-medium">
+            {asset.categoryCode} • {asset.currentPipeline} • {asset.status}
           </span>
         </div>
       </div>
 
-      <div className="mb-4 flex-1">
-        <span className="text-xs text-gray-500 uppercase tracking-wider block mb-1">Remarks</span>
-        <span className="text-sm text-gray-700 line-clamp-2 block h-10">
-          {asset.remarks || 'No remarks available.'}
-        </span>
-      </div>
-
-      <div className="pt-3 border-t-2 border-gray-100 flex justify-between items-center mt-auto">
-        <div className="text-xs text-gray-500">
-          Movements: <span className="font-medium text-gray-900">{asset.movementsCount || 0}</span>
-        </div>
+      {/* Right Section */}
+      <div className="flex items-center justify-end md:pl-4">
         <button
-          onClick={() => onViewDetails(asset)}
-          className="text-xs font-medium text-gray-700 hover:text-gray-900 transition-colors underline underline-offset-2 hover:decoration-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRoute(asset);
+          }}
+          className="whitespace-nowrap text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border-2 border-gray-400 hover:border-gray-600 transition-colors"
         >
-          Asset Details &rarr;
+          Route / Reroute
         </button>
       </div>
     </div>

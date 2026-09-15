@@ -19,6 +19,10 @@ export default function UsersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
       setUserToEdit(null);
@@ -61,20 +65,25 @@ export default function UsersPage() {
 
   const isManagementOrAdmin = currentUser?.role === 'SYSTEM_ADMIN' || currentUser?.role === 'MANAGEMENT';
 
+  // Pagination logic
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const currentUsers = users.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
-    <div className="w-full h-full p-4 max-w-7xl mx-auto">
+    <div className="w-full flex-1 flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage system access, roles, and user accounts.</p>
+          <h1 className="text-xl text-gray-600">
+            User Management
+          </h1>
         </div>
         {isManagementOrAdmin && (
           <button 
             onClick={handleAddNew}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border-2 border-gray-600 rounded-md hover:bg-gray-50 focus:outline-none transition-colors"
           >
             <Plus className="h-4 w-4" />
-            <span className="text-sm font-medium">Add User</span>
+            Add User
           </button>
         )}
       </div>
@@ -85,89 +94,115 @@ export default function UsersPage() {
         </div>
       )}
 
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  User Details
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Role & Status
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Remarks
-                </th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {loading ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-sm text-gray-500">
-                    Loading users...
-                  </td>
-                </tr>
-              ) : users.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-sm text-gray-500">
-                    No users found.
-                  </td>
-                </tr>
-              ) : (
-                users.map(u => (
-                  <tr key={u._id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 font-bold text-lg">
-                          {u.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{u.name}</div>
-                          <div className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
-                            <Mail className="h-3 w-3" />
-                            {u.email}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex flex-col gap-1.5 items-start">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                          <Shield className="h-3 w-3 mr-1" />
-                          {u.role.replace(/_/g, ' ')}
-                        </span>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${u.isActive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                          {u.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500 max-w-xs truncate" title={u.remark || ''}>
-                        {u.remark || <span className="italic text-gray-400">None</span>}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {isManagementOrAdmin && (
-                        <button 
-                          onClick={() => handleEdit(u)}
-                          className="text-blue-600 hover:text-blue-900 inline-flex items-center gap-1 p-1 rounded hover:bg-blue-50 transition-colors"
-                        >
-                          <Edit2 className="h-4 w-4" />
-                          <span>Edit</span>
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div className="space-y-4">
+        {loading ? (
+          <div className="p-12 text-center text-sm text-gray-500">
+            Loading users...
+          </div>
+        ) : currentUsers.length === 0 ? (
+          <div className="p-12 text-center text-sm text-gray-500">
+            No users found on this page.
+          </div>
+        ) : (
+          currentUsers.map(u => (
+            <div 
+              key={u._id} 
+              className="bg-white border-2 border-gray-600 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between hover:border-gray-900 hover:shadow-md transition-all group gap-6 max-w-5xl"
+            >
+              {/* Left Section: User Details */}
+              <div className="flex-1 space-y-2 text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-24">Full Name :</span>
+                  <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{u.name}</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-24">Email :</span>
+                  <span className="font-medium text-gray-900 flex items-center gap-1">
+                    <Mail className="h-3.5 w-3.5" />
+                    {u.email}
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-24">Remarks :</span>
+                  <span className="text-gray-700 line-clamp-1">{u.remark || '-'}</span>
+                </div>
+              </div>
+
+              {/* Middle Section: Role & Status */}
+              <div className="flex-1 space-y-2 text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-20">Role :</span>
+                  <span className="inline-flex items-center text-gray-900 font-medium">
+                    <Shield className="h-3.5 w-3.5 mr-1 text-gray-400" />
+                    {u.role.replace(/_/g, ' ')}
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-gray-500 min-w-20">Status :</span>
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${u.isActive ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+                    {u.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Section: Actions */}
+              <div className="flex items-center justify-end md:pl-4">
+                {isManagementOrAdmin && (
+                  <button
+                    onClick={() => handleEdit(u)}
+                    className="whitespace-nowrap flex items-center gap-2 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border-2 border-gray-400 hover:border-gray-600 transition-colors"
+                  >
+                    <Edit2 className="h-3.5 w-3.5" />
+                    Edit User
+                  </button>
+                )}
+              </div>
+            </div>
+          ))
+        )}
       </div>
+
+      {/* Pagination Controls */}
+      {!loading && (
+        <div className="flex items-center justify-between pt-4 pb-2 mt-auto border-t border-gray-100">
+          <p className="text-sm text-gray-700">
+            Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+            <span className="font-medium">{Math.min(currentPage * itemsPerPage, users.length)}</span> of{' '}
+            <span className="font-medium">{users.length}</span> users
+          </p>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-md disabled:opacity-50 hover:bg-gray-50 transition-colors"
+            >
+              Previous
+            </button>
+            <div className="flex space-x-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                    currentPage === page
+                      ? 'bg-gray-800 text-white font-medium'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-md disabled:opacity-50 hover:bg-gray-50 transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
       <UserFormModal 
         isOpen={isModalOpen}
