@@ -44,7 +44,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await api.post('/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password });
+      
+      // Save access token to a client cookie so Next.js middleware can read it for route protection
+      if (response.data && response.data.accessToken) {
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; SameSite=Lax`;
+      }
 
       if (rememberMe) {
         localStorage.setItem('rememberedEmail', email);

@@ -36,6 +36,7 @@ api.interceptors.response.use(
         // If refresh fails, it means the session is completely expired or invalid
         // Redirect to login if we are in the browser
         if (typeof window !== 'undefined') {
+          document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
           window.location.href = '/login';
         }
         return Promise.reject(refreshError);
