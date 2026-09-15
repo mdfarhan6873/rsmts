@@ -7,6 +7,8 @@ export enum AssetStatus {
   IN_REPAIR = 'IN_REPAIR',
   IN_MANUFACTURING = 'IN_MANUFACTURING',
   CONDEMNED = 'CONDEMNED',
+  READY_TO_DISPATCH = 'READY_TO_DISPATCH',
+  DISPATCHED = 'DISPATCHED',
 }
 
 @Schema({ collection: 'assets', timestamps: true })

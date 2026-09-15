@@ -8,7 +8,7 @@ import RouteRerouteDrawer from '@/components/Assets/RouteRerouteDrawer';
 import api from '@/services/api';
 import { useToast } from '@/contexts/ToastContext';
 
-type MfgTab = 'ALL' | 'GIF' | 'CRANE' | 'OTHER';
+type MfgTab = 'ALL' | 'GIF' | 'CRANE' | 'READY_TO_DISPATCH' | 'DISPATCHED' | 'OTHER';
 
 export default function MfgView() {
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -31,17 +31,19 @@ export default function MfgView() {
   useEffect(() => {
     if (searchTerm.trim().length > 0) {
       const lowerSearch = searchTerm.toLowerCase();
-      const match = assets.find(a => 
+      const match = assets.find(a =>
         a.currentPipeline === "MANUFACTURING" &&
         a.assetNumber.toLowerCase().includes(lowerSearch)
       );
 
       if (match) {
         let targetTab: MfgTab = "ALL";
-        if (match.currentLocationCode === "GIF_SHOP") targetTab = "GIF";
+        if (match.status === "DISPATCHED") targetTab = "DISPATCHED";
+        else if (match.status === "READY_TO_DISPATCH") targetTab = "READY_TO_DISPATCH";
+        else if (match.currentLocationCode === "GIF_SHOP") targetTab = "GIF";
         else if (match.currentLocationCode === "CRANE_MANUFACTURING_SHOP") targetTab = "CRANE";
         else targetTab = "OTHER";
-        
+
         if (activeTab !== targetTab) {
           setActiveTab(targetTab);
         }
@@ -88,17 +90,22 @@ export default function MfgView() {
       case 'ALL':
         return mfgAssets;
       case 'GIF':
-        return mfgAssets.filter((a) => a.currentLocationCode === 'GIF_SHOP');
+        return mfgAssets.filter((a) => a.currentLocationCode === 'GIF_SHOP' && !['READY_TO_DISPATCH','DISPATCHED'].includes(a.status));
       case 'CRANE':
-        return mfgAssets.filter((a) => a.currentLocationCode === 'CRANE_MANUFACTURING_SHOP');
+        return mfgAssets.filter((a) => a.currentLocationCode === 'CRANE_MANUFACTURING_SHOP' && !['READY_TO_DISPATCH','DISPATCHED'].includes(a.status));
+      case 'READY_TO_DISPATCH':
+        return mfgAssets.filter((a) => a.status === 'READY_TO_DISPATCH');
+      case 'DISPATCHED':
+        return mfgAssets.filter((a) => a.status === 'DISPATCHED');
       case 'OTHER':
         return mfgAssets.filter(
-          (a) => !['GIF_SHOP', 'CRANE_MANUFACTURING_SHOP'].includes(a.currentLocationCode)
+          (a) => !['GIF_SHOP', 'CRANE_MANUFACTURING_SHOP'].includes(a.currentLocationCode) &&
+                 !['READY_TO_DISPATCH','DISPATCHED'].includes(a.status)
         );
       default:
         return mfgAssets;
     }
-  }, [assets, activeTab]);
+  }, [assets, activeTab, searchTerm]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredAssets.length / itemsPerPage);
@@ -119,7 +126,7 @@ export default function MfgView() {
 
   const handleMovementSuccess = () => {
     setIsRouteOpen(false);
-    fetchAssets(); // Refresh assets
+    fetchAssets();
   };
 
   const handleDelete = async (asset: Asset) => {
@@ -134,11 +141,25 @@ export default function MfgView() {
     }
   };
 
+  const handleDispatch = async (asset: Asset) => {
+    const nextStatus = asset.status === 'READY_TO_DISPATCH' ? 'DISPATCHED' : 'READY_TO_DISPATCH';
+    const label = nextStatus === 'DISPATCHED' ? 'dispatched' : 'marked as Ready to Dispatch';
+    try {
+      await api.patch(`/assets/${asset.assetNumber}/status`, { status: nextStatus });
+      toast.success(`Asset ${asset.assetNumber} ${label}`);
+      fetchAssets();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || err.message || 'Failed to update dispatch status');
+    }
+  };
+
   const tabs: { id: MfgTab; label: string }[] = [
     { id: 'ALL', label: 'All MFG' },
     { id: 'GIF', label: 'GIF Shop' },
     { id: 'CRANE', label: 'Crane Manufacturing' },
     { id: 'OTHER', label: 'Other' },
+    { id: 'READY_TO_DISPATCH', label: '🟡 Ready to Dispatch' },
+    { id: 'DISPATCHED', label: '✅ Dispatched' },
   ];
 
   return (
@@ -148,14 +169,18 @@ export default function MfgView() {
       {/* Sub tabs */}
       <div>
         <div className="mb-2 text-sm text-gray-500 font-medium tracking-wide">Stages</div>
-        <div className="flex space-x-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id)}
               className={`px-4 py-1 rounded-md text-sm transition-colors border-2 ${
                 activeTab === t.id
-                  ? 'bg-gray-200 border-gray-600 text-gray-900 font-medium'
+                  ? t.id === 'DISPATCHED'
+                    ? 'bg-emerald-100 border-emerald-500 text-emerald-800 font-medium'
+                    : t.id === 'READY_TO_DISPATCH'
+                    ? 'bg-amber-100 border-amber-500 text-amber-800 font-medium'
+                    : 'bg-gray-200 border-gray-600 text-gray-900 font-medium'
                   : 'bg-white border-gray-600 text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -182,12 +207,13 @@ export default function MfgView() {
             onViewDetails={handleViewDetails}
             onRoute={handleRoute}
             onDelete={handleDelete}
+            onDispatch={handleDispatch}
           />
         ))}
       </div>
 
       {/* Pagination Controls */}
-      {!loading && !error && (
+      {!loading && !error && filteredAssets.length > 0 && (
         <div className="flex items-center justify-between pt-4 pb-2 mt-auto border-t border-gray-100">
           <p className="text-sm text-gray-700">
             Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}

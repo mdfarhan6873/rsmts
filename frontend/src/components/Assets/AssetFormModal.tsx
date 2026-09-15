@@ -280,18 +280,25 @@ export default function AssetFormModal({ isOpen, onClose, onSuccess, assetToEdit
               <div>
                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">New Status</label>
                 <div className="flex flex-wrap gap-2">
-                  {['ACTIVE', 'IN_REPAIR', 'IN_MANUFACTURING', 'CONDEMNED'].map(s => (
+                  {[
+                    { value: 'ACTIVE', label: 'Active' },
+                    { value: 'IN_REPAIR', label: 'In Repair' },
+                    { value: 'IN_MANUFACTURING', label: 'In Manufacturing' },
+                    { value: 'CONDEMNED', label: 'Condemned' },
+                    { value: 'READY_TO_DISPATCH', label: 'Ready to Dispatch' },
+                    { value: 'DISPATCHED', label: 'Dispatched' },
+                  ].map(({ value, label }) => (
                     <button
-                      key={s}
+                      key={value}
                       type="button"
-                      onClick={() => setStatus(s)}
+                      onClick={() => setStatus(value)}
                       className={`px-4 py-2 rounded-md text-sm font-medium border-2 transition-colors ${
-                        status === s 
-                          ? 'border-gray-900 bg-gray-200 text-gray-900' 
+                        status === value
+                          ? 'border-gray-900 bg-gray-200 text-gray-900'
                           : 'border-gray-600 bg-white text-gray-700 hover:bg-gray-50'
                       }`}
                     >
-                      {s.replace('_', ' ')}
+                      {label}
                     </button>
                   ))}
                 </div>
