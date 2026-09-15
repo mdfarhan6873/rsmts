@@ -6,23 +6,21 @@ import { PipelineOperation } from './schemas/routing-rule.schema.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { UserRole } from '../users/schemas/user.schema.js';
 @Controller('routing-rules')
-@Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
 export class RoutingRulesController {
   constructor(@Inject(RoutingRulesService) private readonly routingRulesService: RoutingRulesService) {}
 
   @Post()
+  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
   create(@Body() createRoutingRuleDto: CreateRoutingRuleDto) {
     return this.routingRulesService.create(createRoutingRuleDto);
   }
 
   @Get()
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.VIEWER)
   findAll() {
     return this.routingRulesService.findAll();
   }
 
   @Get('allowed')
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.VIEWER, UserRole.YARD_CONTROLLER, UserRole.REPAIR_SUPERVISOR, UserRole.MANUFACTURING_SUPERVISOR, UserRole.QA_INSPECTOR)
   getAllowedLocations(
     @Query('category') category: string,
     @Query('pipeline', new ParseEnumPipe(PipelineOperation)) pipeline: PipelineOperation
@@ -31,17 +29,18 @@ export class RoutingRulesController {
   }
 
   @Get(':id')
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.VIEWER)
   findOne(@Param('id') id: string) {
     return this.routingRulesService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
   update(@Param('id') id: string, @Body() updateRoutingRuleDto: UpdateRoutingRuleDto) {
     return this.routingRulesService.update(id, updateRoutingRuleDto);
   }
 
   @Delete(':id')
+  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
   remove(@Param('id') id: string) {
     return this.routingRulesService.remove(id);
   }

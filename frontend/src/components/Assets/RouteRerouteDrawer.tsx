@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { X, ArrowRight, AlertCircle } from 'lucide-react';
 import api from '@/services/api';
 import { Asset } from './AssetCard';
+import { useToast } from '@/contexts/ToastContext';
 
 interface RouteRerouteDrawerProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function RouteRerouteDrawer({
   const [loadingDestinations, setLoadingDestinations] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const toast = useToast();
 
   // Fetch allowed destinations when drawer opens
   useEffect(() => {
@@ -74,9 +76,12 @@ export default function RouteRerouteDrawer({
         remark: remark.trim()
       });
 
+      toast.success(`Asset successfully moved to ${selectedDestination}`);
       onSuccess();
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to move asset');
+      const msg = err.response?.data?.message || err.message || 'Failed to move asset';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

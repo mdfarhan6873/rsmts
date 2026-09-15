@@ -20,6 +20,9 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findByEmailWithPassword(email);
     if (user && user.password) {
+      if (!user.isActive) {
+        throw new UnauthorizedException('User account is deactivated');
+      }
       const isMatch = await bcrypt.compare(pass, user.password);
       if (isMatch) {
         const { password, ...result } = user.toObject();
@@ -95,8 +98,8 @@ export class AuthService {
     }
 
     const user = await this.usersService.findOne(userId) as UserDocument;
-    if (!user) {
-      throw new UnauthorizedException('User not found');
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('User not found or deactivated');
     }
 
     const payload = { email: user.email, sub: user._id, role: user.role, name: user.name };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import api from '@/services/api';
+import { useToast } from '@/contexts/ToastContext';
 
 export interface Asset {
   assetNumber: string;
@@ -47,6 +48,7 @@ interface Location {
 export default function AssetFormModal({ isOpen, onClose, onSuccess, assetToEdit }: AssetFormModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   // Form Fields
   const [operation, setOperation] = useState('REPAIRING');
@@ -217,11 +219,14 @@ export default function AssetFormModal({ isOpen, onClose, onSuccess, assetToEdit
           currentLocationCode: finalLocationCode,
           remark
         });
+        toast.success(`Asset ${assetNumber} registered successfully!`);
       }
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'An error occurred');
+      const msg = err.response?.data?.message || err.message || 'An error occurred';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

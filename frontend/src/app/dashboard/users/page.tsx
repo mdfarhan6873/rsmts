@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/services/api';
-import { Plus, Edit2, Shield, Mail, KeySquare, Calendar } from 'lucide-react';
+import { Plus, Edit2, Shield, Mail, KeySquare, Calendar, Trash2 } from 'lucide-react';
 import UserFormModal, { User } from '@/components/Users/UserFormModal';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth();
@@ -15,6 +16,7 @@ export default function UsersPage() {
   
   const searchParams = useSearchParams();
   const router = useRouter();
+  const toast = useToast();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
@@ -52,6 +54,18 @@ export default function UsersPage() {
   const handleEdit = (u: User) => {
     setUserToEdit(u);
     setIsModalOpen(true);
+  };
+
+  const handleDelete = async (u: User) => {
+    if (window.confirm(`Are you sure you want to delete user ${u.name}?`)) {
+      try {
+        await api.delete(`/users/${u._id}`);
+        toast.success(`User ${u.name} deleted successfully`);
+        fetchUsers();
+      } catch (err: any) {
+        toast.error(err.response?.data?.message || err.message || 'Failed to delete user');
+      }
+    }
   };
 
   const handleAddNew = () => {
@@ -146,15 +160,27 @@ export default function UsersPage() {
               </div>
 
               {/* Right Section: Actions */}
-              <div className="flex items-center justify-end md:pl-4">
+              <div className="flex items-center justify-end md:pl-4 gap-2">
                 {isManagementOrAdmin && (
-                  <button
-                    onClick={() => handleEdit(u)}
-                    className="whitespace-nowrap flex items-center gap-2 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border-2 border-gray-400 hover:border-gray-600 transition-colors"
-                  >
-                    <Edit2 className="h-3.5 w-3.5" />
-                    Edit User
-                  </button>
+                  <>
+                    <button
+                      onClick={() => handleEdit(u)}
+                      className="whitespace-nowrap flex items-center gap-2 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border-2 border-gray-400 hover:border-gray-600 transition-colors"
+                    >
+                      <Edit2 className="h-3.5 w-3.5" />
+                      Edit
+                    </button>
+                    
+                    {u.isActive && (
+                      <button
+                        onClick={() => handleDelete(u)}
+                        className="whitespace-nowrap flex items-center gap-2 text-xs font-medium text-red-600 bg-white hover:bg-red-50 px-4 py-2 rounded-lg border-2 border-red-200 hover:border-red-400 transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Delete
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>

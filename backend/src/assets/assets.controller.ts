@@ -16,13 +16,11 @@ export class AssetsController {
   }
 
   @Get()
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.VIEWER)
   findAll() {
     return this.assetsService.findAll();
   }
 
   @Get(':assetNumber')
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.VIEWER)
   findOne(@Param('assetNumber') assetNumber: string) {
     return this.assetsService.findOne(assetNumber);
   }

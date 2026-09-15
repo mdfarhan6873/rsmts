@@ -11,7 +11,6 @@ export class AnalyticsController {
   constructor(@Inject(AnalyticsService) private readonly analyticsService: AnalyticsService) {}
 
   @Get('dashboard')
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT)
   getDashboardData(
     @Query('pipeline') pipeline: string,
     @Query('startDate') startDate: string,

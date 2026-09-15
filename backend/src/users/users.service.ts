@@ -54,7 +54,14 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<User> {
-    const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
+    // Instead of hard deleting, we soft delete the user so that audit logs and movement logs 
+    // that reference this user do not break.
+    const deletedUser = await this.userModel.findByIdAndUpdate(
+      id,
+      { isActive: false },
+      { new: true }
+    ).exec();
+    
     if (!deletedUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }

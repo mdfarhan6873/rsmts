@@ -27,8 +27,13 @@ const ADMINISTRATION_NAV: NavItem[] = [
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
+  
+  const isManagementOrAdmin = user?.role === 'SYSTEM_ADMIN' || user?.role === 'MANAGEMENT';
 
   const isRouteActive = (href: string) => {
     if (href === '/dashboard/command-center') {
@@ -78,16 +83,18 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <div>
-          <div className="px-3 mb-4 text-xs font-bold text-blue-400 uppercase tracking-wider">
-            ADMINISTRATION
+        {isManagementOrAdmin && (
+          <div>
+            <div className="px-3 mb-4 text-xs font-bold text-blue-400 uppercase tracking-wider">
+              ADMINISTRATION
+            </div>
+            <div className="space-y-2">
+              {ADMINISTRATION_NAV.map((item) => (
+                <NavLink key={item.href} item={item} />
+              ))}
+            </div>
           </div>
-          <div className="space-y-2">
-            {ADMINISTRATION_NAV.map((item) => (
-              <NavLink key={item.href} item={item} />
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </aside>
   );

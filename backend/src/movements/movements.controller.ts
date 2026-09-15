@@ -19,7 +19,6 @@ export class MovementsController {
   }
 
   @Get('asset/:assetNumber')
-  @Roles(UserRole.SYSTEM_ADMIN, UserRole.MANAGEMENT, UserRole.VIEWER)
   async getAssetHistory(@Param('assetNumber') assetNumber: string) {
     return this.movementsService.getAssetHistory(assetNumber);
   }

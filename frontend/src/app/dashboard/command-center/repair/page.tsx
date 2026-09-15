@@ -6,6 +6,7 @@ import AssetCard, { Asset } from "@/components/Assets/AssetCard";
 import AssetDetailsDrawer from "@/components/Assets/AssetDetailsDrawer";
 import RouteRerouteDrawer from "@/components/Assets/RouteRerouteDrawer";
 import api from "@/services/api";
+import { useToast } from "@/contexts/ToastContext";
 
 type RepairTab = "ALL" | "NSY" | "SHOP" | "QA" | "OTHER";
 
@@ -15,6 +16,7 @@ export default function RepairView() {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<RepairTab>("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+  const toast = useToast();
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -134,9 +136,10 @@ export default function RepairView() {
     if (window.confirm(`Are you sure you want to delete asset ${asset.assetNumber}?`)) {
       try {
         await api.delete(`/assets/${asset.assetNumber}`);
+        toast.success(`Asset ${asset.assetNumber} deleted successfully`);
         fetchAssets();
       } catch (err: any) {
-        alert(err.response?.data?.message || err.message || 'Failed to delete asset');
+        toast.error(err.response?.data?.message || err.message || 'Failed to delete asset');
       }
     }
   };

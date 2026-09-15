@@ -1,6 +1,7 @@
 import Sidebar from '@/components/Layout/Sidebar';
 import TopHeader from '@/components/Layout/TopHeader';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ToastProvider } from '@/contexts/ToastContext';
 
 export default function DashboardLayout({
   children,
@@ -10,15 +11,17 @@ export default function DashboardLayout({
   return (
     <AuthProvider>
       <div className="flex h-screen bg-white overflow-hidden font-sans text-gray-900">
-        <Sidebar />
-        <div className="flex flex-col flex-1 min-w-0 bg-white">
-          <div className="flex justify-end items-center px-6 pt-4 bg-white">
-            <TopHeader />
+        <ToastProvider>
+          <Sidebar />
+          <div className="flex flex-col flex-1 min-w-0 bg-white">
+            <div className="flex justify-end items-center px-6 pt-4 bg-white">
+              <TopHeader />
+            </div>
+            <main className="flex flex-col flex-1 overflow-y-auto bg-white p-6 pt-2">
+              {children}
+            </main>
           </div>
-          <main className="flex flex-col flex-1 overflow-y-auto bg-white p-6 pt-2">
-            {children}
-          </main>
-        </div>
+        </ToastProvider>
       </div>
     </AuthProvider>
   );

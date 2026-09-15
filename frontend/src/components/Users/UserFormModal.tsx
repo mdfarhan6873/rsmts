@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/services/api';
+import { useToast } from '@/contexts/ToastContext';
 
 console.log("UserFormModal loaded with new UI");
 
@@ -29,6 +30,7 @@ export default function UserFormModal({ isOpen, onClose, onSuccess, userToEdit }
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -89,14 +91,18 @@ export default function UserFormModal({ isOpen, onClose, onSuccess, userToEdit }
     try {
       if (userToEdit) {
         await api.patch(`/users/${userToEdit._id}`, payload);
+        toast.success(`User ${payload.name} updated successfully`);
       } else {
         await api.post('/users', payload);
+        toast.success(`User ${payload.name} created successfully`);
       }
 
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'An error occurred');
+      const msg = err.response?.data?.message || err.message || 'An error occurred';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
