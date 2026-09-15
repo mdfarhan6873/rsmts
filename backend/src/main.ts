@@ -17,9 +17,13 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS
+  // Enable CORS — allow Netlify frontend in production, localhost in dev
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? [process.env.FRONTEND_URL, 'http://localhost:3000', 'http://localhost:3001']
+    : true; // allow all in dev if env not set
+
   app.enableCors({
-    origin: true, // Allow all origins for dev, or specify
+    origin: allowedOrigins,
     credentials: true,
   });
 
