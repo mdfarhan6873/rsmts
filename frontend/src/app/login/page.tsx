@@ -14,7 +14,8 @@ import {
   EyeOff, 
   Eye, 
   Shield, 
-  Headset
+  Headset,
+  Download
 } from 'lucide-react';
 import api from '../../services/api';
 
@@ -158,11 +159,24 @@ export default function LoginPage() {
       {/* Right Panel: Login Form */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 relative bg-white">
         
-        {/* Language Switcher */}
-        <div className="absolute top-8 right-8">
+        {/* Top Right Actions */}
+        <div className="absolute top-8 right-8 flex items-center gap-3">
+          {/* Download App */}
+          <a 
+            href="https://rsmts.netlify.app/rsmts_jamalpur.apk"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            className="flex items-center gap-2 px-3 py-1.5 border border-blue-200 bg-blue-50 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-100 transition-colors shadow-sm"
+          >
+            <Download size={16} />
+            <span className="hidden sm:inline">Download App</span>
+          </a>
+
+          {/* Language Switcher */}
           <button className="flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
             <Globe size={16} />
-            English
+            <span className="hidden sm:inline">English</span>
             <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
         </div>
