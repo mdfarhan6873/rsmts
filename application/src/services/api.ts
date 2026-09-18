@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'https://rsmts.onrender.com';
+const API_URL = 'https://railsmts.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,
